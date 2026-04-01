@@ -1,0 +1,13 @@
+venv/
+.venv/
+env/
+__pycache__/
+*.pyc
+outputs/
+*.zip
+*.pth
+*.pt
+*.ckpt
+Dataset/
+*.nii.gz
+.ipynb_checkpoints/

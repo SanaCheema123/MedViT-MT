@@ -1,0 +1,94 @@
+project:
+  name: MedViT-MT
+  seed: 42
+  device: cpu                            # change to cuda if GPU available
+
+paths:
+  dataset_root: "E:/Brain Tumer/Dataset"
+  mri_images: "E:/Brain Tumer/Dataset/MRI Images"
+  clinical_csv: "E:/Brain Tumer/Dataset/UPENN-GBM_clinical_info_v2_1.csv"
+  mri_subfolder: ""
+  processed_images: "E:/Brain Tumer/data/processed/images"
+  processed_clinical: "E:/Brain Tumer/data/processed/clinical"
+  splits_dir: "E:/Brain Tumer/data/splits"
+  cache_dir: "E:/Brain Tumer/data/cache"
+  checkpoints: "E:/Brain Tumer/outputs/checkpoints"
+  logs: "E:/Brain Tumer/outputs/logs"
+  plots: "E:/Brain Tumer/outputs/plots"
+  tables: "E:/Brain Tumer/outputs/results/tables"
+
+data:
+  image_size: 224                        # resize all slices to 224x224
+  image_channels: 3                      # RGB (converted from grayscale)
+  max_slices_per_patient: 10             # reduced for faster training
+  train_ratio: 0.70
+  val_ratio: 0.15
+  test_ratio: 0.15
+  stratify_by: IDH1                      # stratified split column
+  clinical_features:
+    - Gender
+    - Age_at_scan_years
+    - Survival_from_surgery_days_UPDATED
+    - IDH1
+    - MGMT
+    - GTR_over90percent
+    - PsP_TP_score
+
+model:
+  backbone: swin_tiny_patch4_window7_224  # timm model name
+  pretrained: true
+  embed_dim: 768
+  num_attention_heads: 8
+  fusion_dim: 256                         # clinical fusion hidden size
+  temporal_depth: 2                       # temporal transformer layers
+  dropout: 0.1
+
+tasks:
+  segmentation: true
+  captioning: true
+  grounding: true
+  num_seg_classes: 2                      # tumor / background
+  num_grounding_queries: 10              # DETR-style object queries
+
+training:
+  epochs: 10
+  batch_size: 4                          # 16GB RAM can handle 4
+  learning_rate: 0.0001
+  weight_decay: 0.0001
+  scheduler: cosine
+  warmup_epochs: 5
+  grad_clip: 1.0
+  mixed_precision: false                 # set true if GPU available
+  save_best_only: true
+  task_weights:
+    segmentation: 1.0
+    captioning: 0.5
+    grounding: 0.5
+
+few_shot:
+  enabled: true
+  k_shots: [1, 5, 10]
+
+zero_shot:
+  enabled: true
+
+evaluation:
+  metrics:
+    - accuracy
+    - precision
+    - recall
+    - f1
+    - auc_roc
+    - confusion_matrix
+    - dice
+    - iou
+    - bleu
+    - rouge
+    - map
+  statistical_tests:
+    - wilcoxon
+    - mcnemar
+    - delong
+    - kaplan_meier
+  save_plots: true
+  save_tables: true

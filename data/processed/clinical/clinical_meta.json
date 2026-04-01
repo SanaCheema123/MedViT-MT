@@ -1,0 +1,41 @@
+{
+  "encodings": {
+    "Gender": {
+      "F": 0,
+      "M": 1
+    },
+    "IDH1": {
+      "Wildtype": 0,
+      "Mutated": 1,
+      "NOS/NEC": 2
+    },
+    "MGMT": {
+      "Unmethylated": 0,
+      "Methylated": 1,
+      "Indeterminate": 2
+    },
+    "GTR_over90percent": {
+      "Y": 1,
+      "N": 0
+    },
+    "Survival_Status": {
+      "Deceased": 0,
+      "Alive": 1,
+      "Lost to Follow-up": 2
+    }
+  },
+  "normalization": {
+    "Age_at_scan_years": {
+      "min": 18.65,
+      "max": 88.5
+    },
+    "Survival_from_surgery_days_UPDATED": {
+      "min": 3.0,
+      "max": 6109.0
+    },
+    "Time_since_baseline_preop": {
+      "min": 0.0,
+      "max": 1762.0
+    }
+  }
+}
